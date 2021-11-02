@@ -1287,6 +1287,7 @@ export interface MicroApp {
     locales?: AppLocales;
     menuIcon?: MenuIcon;
     name: string;
+    noAuthGuard?: boolean;
     private?: boolean;
     status?: "developing" | "enabled" | "disabled";
     userConfig?: Record<string, unknown>;

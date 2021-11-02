@@ -162,7 +162,7 @@ export class Runtime implements AbstractRuntime {
   }
 
   reloadMicroApps(interceptorParams?: InterceptorParams): Promise<void> {
-    return kernel.loadMicroApps(
+    return kernel.reloadMicroApps(
       {
         check_login: true,
       },

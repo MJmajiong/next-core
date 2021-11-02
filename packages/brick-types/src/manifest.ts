@@ -153,6 +153,11 @@ export interface MicroApp {
   localeName?: string;
 
   /**
+   * 整个应用不启用登录守卫。
+   */
+  noAuthGuard?: boolean;
+
+  /**
    * 路由别名映射（运行时得出）。
    *
    * @internal

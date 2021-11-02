@@ -93,13 +93,7 @@ export class Kernel {
 
   async bootstrap(mountPoints: MountPoints): Promise<void> {
     this.mountPoints = mountPoints;
-    let requests: Promise<unknown>[];
-    if (window.STANDALONE_MICRO_APPS) {
-      requests = [this.loadMicroApps()];
-    } else {
-      requests = [this.loadCheckLogin(), this.loadMicroApps()];
-    }
-    await Promise.all(requests);
+    await Promise.all([this.loadCheckLogin(), this.loadMicroApps()]);
     if (this.bootstrapData.storyboards.length === 0) {
       throw new Error("No storyboard were found.");
     }
@@ -127,7 +121,7 @@ export class Kernel {
 
     await this.router.bootstrap();
     if (!window.STANDALONE_MICRO_APPS) {
-      this.authGuard();
+      this.legacyAuthGuard();
     }
     listenDevtools();
   }
@@ -181,7 +175,7 @@ export class Kernel {
     ]);
   }
 
-  private authGuard(): void {
+  private legacyAuthGuard(): void {
     // Listen messages from legacy Console-W,
     // Redirect to login page if received an `auth.guard` message.
     window.addEventListener("message", (event: MessageEvent): void => {
@@ -200,18 +194,20 @@ export class Kernel {
   }
 
   private async loadCheckLogin(): Promise<void> {
-    const auth = await AuthSdk.checkLogin();
-    if (auth.loggedIn) {
-      authenticate(auth);
+    if (!window.STANDALONE_MICRO_APPS) {
+      const auth = await AuthSdk.checkLogin();
+      if (auth.loggedIn) {
+        authenticate(auth);
+      }
     }
   }
 
-  async loadMicroApps(
+  private async loadMicroApps(
     params?: { check_login?: boolean },
     interceptorParams?: InterceptorParams
   ): Promise<void> {
-    const d = await (window.STANDALONE_MICRO_APPS
-      ? http.get<BootstrapData>(window.BOOTSTRAP_PATH)
+    const data = await (window.STANDALONE_MICRO_APPS
+      ? http.get<BootstrapData>(window.BOOTSTRAP_PATH, { interceptorParams })
       : AuthSdk.bootstrap<BootstrapData>(
           {
             brief: true,
@@ -225,7 +221,7 @@ export class Kernel {
       {
         templatePackages: [],
       },
-      d
+      data
     );
     // Merge `app.defaultConfig` and `app.userConfig` to `app.config`.
     processBootstrapResponse(bootstrapResponse);
@@ -235,6 +231,16 @@ export class Kernel {
         .map((storyboard) => storyboard.app)
         .filter(Boolean),
     };
+  }
+
+  reloadMicroApps(
+    params?: { check_login?: boolean },
+    interceptorParams?: InterceptorParams
+  ): Promise<void> {
+    // There is no need to reload standalone micro-apps.
+    if (!window.STANDALONE_MICRO_APPS) {
+      return this.loadMicroApps(params, interceptorParams);
+    }
   }
 
   async fulfilStoryboard(storyboard: RuntimeStoryboard): Promise<void> {
@@ -250,13 +256,13 @@ export class Kernel {
   private async doFulfilStoryboard(
     storyboard: RuntimeStoryboard
   ): Promise<void> {
-    if (!window.STANDALONE_MICRO_APPS) {
+    if (window.STANDALONE_MICRO_APPS) {
+      Object.assign(storyboard, { $$fulfilled: true });
+    } else {
       const { routes, meta } = await AuthSdk.getAppStoryboard(
         storyboard.app.id
       );
       Object.assign(storyboard, { routes, meta, $$fulfilled: true });
-    } else {
-      Object.assign(storyboard, { $$fulfilled: true });
     }
     storyboard.app.$$routeAliasMap = scanRouteAliasInStoryboard(storyboard);
 

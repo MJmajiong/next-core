@@ -170,9 +170,9 @@ describe("Runtime", () => {
     const mountPoints: MountPoints = {} as any;
     await runtime.bootstrap(mountPoints);
     const mockKernelInstance = spyOnKernel.mock.instances[0];
-    mockKernelInstance.loadMicroApps = jest.fn();
+    mockKernelInstance.reloadMicroApps = jest.fn();
     runtime.reloadMicroApps();
-    expect(mockKernelInstance.loadMicroApps).toBeCalled();
+    expect(mockKernelInstance.reloadMicroApps).toBeCalled();
   });
 
   it("should get homepage", async () => {

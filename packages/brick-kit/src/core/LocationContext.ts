@@ -285,12 +285,11 @@ export class LocationContext {
         exact: route.exact,
       });
       if (match !== null) {
-        if (route.public || isLoggedIn()) {
+        if (app.noAuthGuard || route.public || isLoggedIn()) {
           this.currentMatch = match;
           return { match, route };
-        } else {
-          return "unauthenticated";
         }
+        return "unauthenticated";
       }
     }
     return "missed";

@@ -65,6 +65,11 @@ describe("LocationContext", () => {
         },
       ],
     },
+    nextApp: {
+      id: "hello",
+      name: "Hello",
+      homepage: "/hello",
+    },
     unsetBars: jest.fn(),
     menuBar: {
       element: {},

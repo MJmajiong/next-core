@@ -19,6 +19,7 @@ import {
   RuntimeBootstrapData,
   Storyboard,
 } from "@next-core/brick-types";
+import { http } from "@next-core/brick-http";
 import { Kernel } from "./Kernel";
 import { authenticate, isLoggedIn } from "../auth";
 import { MenuBar, AppBar, BaseBar } from "./Bars";
@@ -117,6 +118,10 @@ spyOnGetDllAndDepsByResource.mockImplementation(
   })
 );
 
+jest.spyOn(console, "warn").mockImplementation(() => void 0);
+
+const mockHttpGet = jest.spyOn(http, "get");
+
 (deepFreeze as jest.Mock).mockImplementation((t) => Object.freeze(t));
 
 // Mock a custom element of `my.test-provider`.
@@ -137,6 +142,8 @@ describe("Kernel", () => {
 
   beforeEach(() => {
     kernel = new Kernel();
+    window.STANDALONE_MICRO_APPS = undefined;
+    window.BOOTSTRAP_PATH = undefined;
   });
 
   afterEach(() => {
@@ -387,7 +394,7 @@ describe("Kernel", () => {
     spyOnCheckLogin.mockResolvedValueOnce({
       loggedIn: false,
     });
-    spyOnBootstrap.mockResolvedValueOnce({
+    spyOnBootstrap.mockResolvedValue({
       storyboards: [
         {
           routes: [],
@@ -396,7 +403,47 @@ describe("Kernel", () => {
       brickPackages: [],
     });
     await kernel.bootstrap(mountPoints);
+    expect(spyOnBootstrap).toBeCalledTimes(1);
     expect(spyOnAuthenticate).not.toBeCalled();
+
+    await kernel.reloadMicroApps();
+    expect(spyOnBootstrap).toBeCalledTimes(2);
+    spyOnBootstrap.mockReset();
+  });
+
+  it("should bootstrap for standalone micro-apps", async () => {
+    window.STANDALONE_MICRO_APPS = true;
+    window.BOOTSTRAP_PATH = "bootstrap.json";
+    const mountPoints: MountPoints = {
+      appBar: document.createElement("div") as any,
+      menuBar: document.createElement("div") as any,
+      loadingBar: document.createElement("div") as any,
+      main: document.createElement("div") as any,
+      bg: document.createElement("div") as any,
+      portal: document.createElement("div") as any,
+    };
+    const appHello: any = {
+      app: {
+        id: "hello",
+      },
+    };
+    mockHttpGet.mockResolvedValueOnce({
+      storyboards: [appHello],
+    });
+    await kernel.bootstrap(mountPoints);
+    expect(spyOnCheckLogin).not.toBeCalled();
+    expect(spyOnBootstrap).not.toBeCalled();
+    expect(mockHttpGet).toBeCalledTimes(1);
+    expect(mockHttpGet).toBeCalledWith("bootstrap.json", {
+      interceptorParams: undefined,
+    });
+
+    await kernel.reloadMicroApps();
+    expect(spyOnBootstrap).not.toBeCalled();
+    expect(mockHttpGet).toBeCalledTimes(1);
+
+    await kernel.fulfilStoryboard(appHello);
+    expect(spyOnGetAppStoryboard).not.toBeCalled();
   });
 
   it("should firstRendered", async () => {
@@ -419,7 +466,7 @@ describe("Kernel", () => {
       ],
       brickPackages: [],
     });
-    await kernel.bootstrap({});
+    await kernel.bootstrap({} as any);
     kernel.bootstrapData = {
       navbar: {
         menuBar: "basic-bricks.menu-bar",
@@ -489,7 +536,7 @@ describe("Kernel", () => {
       },
     });
     localStorage.setItem("test-ui-v8", "true");
-    await kernel.bootstrap({});
+    await kernel.bootstrap({} as any);
     kernel.bootstrapData = {
       navbar: {
         menuBar: "basic-bricks.menu-bar",
@@ -841,7 +888,7 @@ describe("Kernel", () => {
       brickPackages: [],
     });
     mockGetMiscSettings.mockImplementationOnce(() => ({ gaMeasurementId }));
-    await kernel.bootstrap({});
+    await kernel.bootstrap({} as any);
     expect(sypOnUserAnalyticsInit).toBeCalledWith({
       gaMeasurementId,
       sendPageView: false,
