@@ -126,7 +126,7 @@ customElements.define(
   class ProviderCustomApi extends HTMLElement {}
 );
 
-(window as any).DLL_PATH = {
+window.DLL_PATH = {
   d3: "dll-of-d3.123.js",
   "editor-bricks-helper": "dll-of-editor-bricks-helper.456.js",
   "react-dnd": "dll-of-react-dnd.789.js",

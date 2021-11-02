@@ -32,6 +32,8 @@ import {
   PresetBricksConf,
   RouteConf,
 } from "@next-core/brick-types";
+import { userAnalytics } from "@next-core/easyops-analytics";
+import { http } from "@next-core/brick-http";
 import { authenticate, isLoggedIn } from "../auth";
 import {
   Router,
@@ -54,7 +56,6 @@ import { registerCustomApi, CUSTOM_API_PROVIDER } from "../providers/CustomApi";
 import { loadAllLazyBricks, loadLazyBricks } from "./LazyBrickRegistry";
 import { isCustomApiProvider } from "./FlowApi";
 import { getRuntime } from "../runtime";
-import { userAnalytics } from "@next-core/easyops-analytics";
 
 export class Kernel {
   public mountPoints: MountPoints;
@@ -92,7 +93,13 @@ export class Kernel {
 
   async bootstrap(mountPoints: MountPoints): Promise<void> {
     this.mountPoints = mountPoints;
-    await Promise.all([this.loadCheckLogin(), this.loadMicroApps()]);
+    let requests: Promise<unknown>[];
+    if (window.STANDALONE_MICRO_APPS) {
+      requests = [this.loadMicroApps()];
+    } else {
+      requests = [this.loadCheckLogin(), this.loadMicroApps()];
+    }
+    await Promise.all(requests);
     if (this.bootstrapData.storyboards.length === 0) {
       throw new Error("No storyboard were found.");
     }
@@ -119,7 +126,9 @@ export class Kernel {
     }
 
     await this.router.bootstrap();
-    this.authGuard();
+    if (!window.STANDALONE_MICRO_APPS) {
+      this.authGuard();
+    }
     listenDevtools();
   }
 
@@ -201,15 +210,17 @@ export class Kernel {
     params?: { check_login?: boolean },
     interceptorParams?: InterceptorParams
   ): Promise<void> {
-    const d = await AuthSdk.bootstrap<BootstrapData>(
-      {
-        brief: true,
-        ...params,
-      },
-      {
-        interceptorParams,
-      }
-    );
+    const d = await (window.STANDALONE_MICRO_APPS
+      ? http.get<BootstrapData>(window.BOOTSTRAP_PATH)
+      : AuthSdk.bootstrap<BootstrapData>(
+          {
+            brief: true,
+            ...params,
+          },
+          {
+            interceptorParams,
+          }
+        ));
     const bootstrapResponse = Object.assign(
       {
         templatePackages: [],
@@ -239,15 +250,21 @@ export class Kernel {
   private async doFulfilStoryboard(
     storyboard: RuntimeStoryboard
   ): Promise<void> {
-    const { routes, meta } = await AuthSdk.getAppStoryboard(storyboard.app.id);
-    Object.assign(storyboard, { routes, meta, $$fulfilled: true });
+    if (!window.STANDALONE_MICRO_APPS) {
+      const { routes, meta } = await AuthSdk.getAppStoryboard(
+        storyboard.app.id
+      );
+      Object.assign(storyboard, { routes, meta, $$fulfilled: true });
+    } else {
+      Object.assign(storyboard, { $$fulfilled: true });
+    }
     storyboard.app.$$routeAliasMap = scanRouteAliasInStoryboard(storyboard);
 
-    if (meta?.i18n) {
+    if (storyboard.meta?.i18n) {
       // Prefix to avoid conflict between brick package's i18n namespace.
       const i18nNamespace = `$app-${storyboard.app.id}`;
       // Support any language in `meta.i18n`.
-      Object.entries(meta.i18n).forEach(([lang, resources]) => {
+      Object.entries(storyboard.meta.i18n).forEach(([lang, resources]) => {
         i18next.addResourceBundle(lang, i18nNamespace, resources);
       });
     }
@@ -257,7 +274,7 @@ export class Kernel {
     const { brickPackages, templatePackages } = this.bootstrapData;
 
     if (storyboard.dependsAll) {
-      const dllPath: Record<string, string> = (window as any).DLL_PATH || {};
+      const dllPath = window.DLL_PATH || {};
       const reactDnd = "react-dnd";
       // istanbul ignore else
       if (dllPath[reactDnd]) {
@@ -655,7 +672,7 @@ export class Kernel {
 // always load react-dnd before loading editor-bricks-helper.
 async function loadScriptOfDll(dlls: string[]): Promise<void> {
   if (dlls.some((dll) => dll.startsWith("dll-of-editor-bricks-helper."))) {
-    const dllPath: Record<string, string> = (window as any).DLL_PATH || {};
+    const dllPath = window.DLL_PATH || {};
     await loadScript(dllPath["react-dnd"]);
   }
   // `loadScript` is auto cached, no need to filter out `react-dnd`.

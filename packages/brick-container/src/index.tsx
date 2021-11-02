@@ -6,7 +6,6 @@ import { Result } from "antd";
 import {
   createRuntime,
   getAuth,
-  getRuntime,
   httpErrorToString,
 } from "@next-core/brick-kit";
 import {
