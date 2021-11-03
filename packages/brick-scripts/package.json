@@ -1,6 +1,6 @@
 {
   "name": "@next-core/brick-scripts",
-  "version": "2.6.6",
+  "version": "2.6.7-alpha.0",
   "description": "Generate new brick-packages or new lib-packages or new bricks in existed packages",
   "homepage": "$repo-org-url$/next-core/tree/master/packages/brick-scripts",
   "license": "GPL-3.0",
@@ -26,7 +26,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@next-core/repo-config": "^0.2.1",
+    "@next-core/repo-config": "^0.2.2-alpha.0",
     "chalk": "^4.1.1",
     "change-case": "^4.1.2",
     "execa": "^5.1.1",

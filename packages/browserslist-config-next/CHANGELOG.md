@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4-alpha.0](https://github.com/easyops-cn/next-core/compare/@next-core/browserslist-config-next@0.1.3...@next-core/browserslist-config-next@0.1.4-alpha.0) (2021-11-03)
+
+**Note:** Version bump only for package @next-core/browserslist-config-next
+
 ## [0.1.3](https://github.com/easyops-cn/next-core/compare/@next-core/browserslist-config-next@0.1.2...@next-core/browserslist-config-next@0.1.3) (2021-02-07)
 
 ### Bug Fixes

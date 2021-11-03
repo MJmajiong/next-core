@@ -3,35 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [0.4.0](https://github.com/easyops-cn/next-core/compare/@next-core/easyops-analytics@0.3.0...@next-core/easyops-analytics@0.4.0) (2021-10-28)
+## [0.4.1-alpha.0](https://github.com/easyops-cn/next-core/compare/@next-core/easyops-analytics@0.4.0...@next-core/easyops-analytics@0.4.1-alpha.0) (2021-11-03)
 
+**Note:** Version bump only for package @next-core/easyops-analytics
+
+# [0.4.0](https://github.com/easyops-cn/next-core/compare/@next-core/easyops-analytics@0.3.0...@next-core/easyops-analytics@0.4.0) (2021-10-28)
 
 ### Features
 
-* **userAnalytics:** init function add sendPageView option ([9211a3a](https://github.com/easyops-cn/next-core/commit/9211a3a6a371d60de2e3ec55008a491eb5d3b96d))
-
-
-
-
+- **userAnalytics:** init function add sendPageView option ([9211a3a](https://github.com/easyops-cn/next-core/commit/9211a3a6a371d60de2e3ec55008a491eb5d3b96d))
 
 # [0.3.0](https://github.com/easyops-cn/next-core/compare/@next-core/easyops-analytics@0.2.4...@next-core/easyops-analytics@0.3.0) (2021-10-21)
 
-
 ### Features
 
-* add userAnalytics ([b960f7c](https://github.com/easyops-cn/next-core/commit/b960f7c0e8db81ecf4680abe41dae63614641124))
-
-
-
-
+- add userAnalytics ([b960f7c](https://github.com/easyops-cn/next-core/commit/b960f7c0e8db81ecf4680abe41dae63614641124))
 
 ## [0.2.4](https://github.com/easyops-cn/next-core/compare/@next-core/easyops-analytics@0.2.3...@next-core/easyops-analytics@0.2.4) (2021-10-12)
 
 **Note:** Version bump only for package @next-core/easyops-analytics
-
-
-
-
 
 ## [0.2.3](https://github.com/easyops-cn/next-core/compare/@next-core/easyops-analytics@0.2.2...@next-core/easyops-analytics@0.2.3) (2021-09-06)
 
