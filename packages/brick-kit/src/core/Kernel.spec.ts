@@ -143,6 +143,7 @@ describe("Kernel", () => {
   beforeEach(() => {
     kernel = new Kernel();
     window.STANDALONE_MICRO_APPS = undefined;
+    window.NO_AUTH_GUARD = undefined;
     window.BOOTSTRAP_PATH = undefined;
   });
 
@@ -413,6 +414,7 @@ describe("Kernel", () => {
 
   it("should bootstrap for standalone micro-apps", async () => {
     window.STANDALONE_MICRO_APPS = true;
+    window.NO_AUTH_GUARD = true;
     window.BOOTSTRAP_PATH = "bootstrap.json";
     const mountPoints: MountPoints = {
       appBar: document.createElement("div") as any,

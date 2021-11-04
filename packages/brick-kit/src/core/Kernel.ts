@@ -194,7 +194,7 @@ export class Kernel {
   }
 
   private async loadCheckLogin(): Promise<void> {
-    if (!window.STANDALONE_MICRO_APPS) {
+    if (!window.NO_AUTH_GUARD) {
       const auth = await AuthSdk.checkLogin();
       if (auth.loggedIn) {
         authenticate(auth);

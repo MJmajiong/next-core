@@ -454,7 +454,7 @@ export class Router {
         }
         return;
       }
-    } else if (!window.STANDALONE_MICRO_APPS && !isLoggedIn()) {
+    } else if (!window.NO_AUTH_GUARD && !isLoggedIn()) {
       // Todo(steve): refine after api-gateway supports fetching storyboards before logged in.
       // Redirect to login if no storyboard is matched.
       redirectToLogin();

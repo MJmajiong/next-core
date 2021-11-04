@@ -30,6 +30,7 @@ interface Window {
   dataLayer?: IArguments[];
   DLL_PATH?: Record<string, string>;
   STANDALONE_MICRO_APPS?: boolean;
+  NO_AUTH_GUARD?: boolean;
   BOOTSTRAP_PATH?: string;
   BRICK_NEXT_VERSIONS?: Record<string, string>;
   BRICK_NEXT_FEATURES?: string[];
