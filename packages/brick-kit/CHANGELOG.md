@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.81.2-alpha.0](https://github.com/easyops-cn/next-core/compare/@next-core/brick-kit@2.81.1-alpha.0...@next-core/brick-kit@2.81.2-alpha.0) (2021-11-04)
+
+### Bug Fixes
+
+- suppoort window.NO_AUTH_GUARD ([2258549](https://github.com/easyops-cn/next-core/commit/22585494a39654eb3da781989a15311f08700737))
+
 ## [2.81.1-alpha.0](https://github.com/easyops-cn/next-core/compare/@next-core/brick-kit@2.81.0-alpha.0...@next-core/brick-kit@2.81.1-alpha.0) (2021-11-03)
 
 **Note:** Version bump only for package @next-core/brick-kit
