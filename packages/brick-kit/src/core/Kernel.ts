@@ -641,12 +641,12 @@ export class Kernel {
     return Object.assign({}, this.bootstrapData?.settings?.featureFlags);
   }
 
-  getStandaloneMenuList(): any {
+  getStandaloneMenus(): any {
     const currentAppId = this.currentApp.id;
     const currentStoryboard = this.bootstrapData.storyboards.find(
       (storyboard) => storyboard.app.id === currentAppId
     );
-    return cloneDeep((currentStoryboard.meta as any)?.menu ?? []).map(
+    return (cloneDeep((currentStoryboard.meta as any)?.menus) ?? []).map(
       (menu: any) => ({
         ...menu,
         app: [{ appId: currentAppId }],

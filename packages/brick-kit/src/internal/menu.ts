@@ -93,7 +93,7 @@ export async function fetchMenuById(
     return menuCache.get(menuId);
   }
   const menuList = window.STANDALONE_MICRO_APPS
-    ? kernel.getStandaloneMenuList()
+    ? kernel.getStandaloneMenus()
     : ((
         await InstanceApi_postSearch("EASYOPS_STORYBOARD_MENU", {
           page: 1,
