@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.82.0-alpha.2](https://github.com/easyops-cn/next-core/compare/@next-core/brick-kit@2.82.0-alpha.1...@next-core/brick-kit@2.82.0-alpha.2) (2021-11-04)
+
+### Bug Fixes
+
+- disable loading related apps for standalone micro-apps ([43d5bb3](https://github.com/easyops-cn/next-core/commit/43d5bb309d8bd34088330e52b71368e560e91b3d))
+
 # [2.82.0-alpha.1](https://github.com/easyops-cn/next-core/compare/@next-core/brick-kit@2.82.0-alpha.0...@next-core/brick-kit@2.82.0-alpha.1) (2021-11-04)
 
 ### Bug Fixes
