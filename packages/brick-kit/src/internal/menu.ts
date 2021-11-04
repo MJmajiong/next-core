@@ -85,42 +85,47 @@ export async function constructMenu(
   }
 }
 
-export async function fetchMenuById(menuId: string): Promise<MenuRawData> {
+export async function fetchMenuById(
+  menuId: string,
+  kernel: Kernel
+): Promise<MenuRawData> {
   if (menuCache.has(menuId)) {
     return menuCache.get(menuId);
   }
-  const menuList = (
-    await InstanceApi_postSearch("EASYOPS_STORYBOARD_MENU", {
-      page: 1,
-      page_size: 200,
-      fields: {
-        menuId: true,
-        title: true,
-        icon: true,
-        link: true,
-        titleDataSource: true,
-        defaultCollapsed: true,
-        defaultCollapsedBreakpoint: true,
-        type: true,
-        injectMenuGroupId: true,
-        dynamicItems: true,
-        itemsResolve: true,
-        items: true,
-        "items.children": true,
-        "app.appId": true,
-      },
-      query: {
-        menuId: {
-          $eq: menuId,
-        },
-        app: {
-          $size: {
-            $gt: 0,
+  const menuList = window.STANDALONE_MICRO_APPS
+    ? kernel.getStandaloneMenuList()
+    : ((
+        await InstanceApi_postSearch("EASYOPS_STORYBOARD_MENU", {
+          page: 1,
+          page_size: 200,
+          fields: {
+            menuId: true,
+            title: true,
+            icon: true,
+            link: true,
+            titleDataSource: true,
+            defaultCollapsed: true,
+            defaultCollapsedBreakpoint: true,
+            type: true,
+            injectMenuGroupId: true,
+            dynamicItems: true,
+            itemsResolve: true,
+            items: true,
+            "items.children": true,
+            "app.appId": true,
           },
-        },
-      },
-    })
-  ).list as MenuRawData[];
+          query: {
+            menuId: {
+              $eq: menuId,
+            },
+            app: {
+              $size: {
+                $gt: 0,
+              },
+            },
+          },
+        })
+      ).list as MenuRawData[]);
   await Promise.all(menuList.map(loadDynamicMenuItems));
   const menuData = mergeMenu(menuList);
   if (!menuData) {
@@ -216,7 +221,7 @@ export async function processMenu(
   kernel: Kernel,
   hasSubMenu?: boolean
 ): Promise<SidebarMenu> {
-  const { items, app, ...restMenuData } = await fetchMenuById(menuId);
+  const { items, app, ...restMenuData } = await fetchMenuById(menuId, kernel);
 
   const menuData = {
     ...(await computeRealValueWithOverrideApp(

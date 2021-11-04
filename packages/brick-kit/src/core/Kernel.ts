@@ -1,4 +1,4 @@
-import { sortBy } from "lodash";
+import { cloneDeep, sortBy } from "lodash";
 import {
   loadScript,
   prefetchScript,
@@ -639,6 +639,19 @@ export class Kernel {
 
   getFeatureFlags(): FeatureFlags {
     return Object.assign({}, this.bootstrapData?.settings?.featureFlags);
+  }
+
+  getStandaloneMenuList(): any {
+    const currentAppId = this.currentApp.id;
+    const currentStoryboard = this.bootstrapData.storyboards.find(
+      (storyboard) => storyboard.app.id === currentAppId
+    );
+    return cloneDeep((currentStoryboard.meta as any)?.menu ?? []).map(
+      (menu: any) => ({
+        ...menu,
+        app: [{ appId: currentAppId }],
+      })
+    );
   }
 
   async getProviderBrick(provider: string): Promise<HTMLElement> {

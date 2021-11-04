@@ -190,8 +190,6 @@ export class Router {
     const history = getHistory();
     history.unblock();
 
-    const pageTracker = apiAnalyzer.getInstance()?.pageTracker();
-
     const locationContext = (this.locationContext = new LocationContext(
       this.kernel,
       location
@@ -428,7 +426,10 @@ export class Router {
         // See https://github.com/ReactTraining/react-router/blob/master/packages/react-router-dom/docs/guides/scroll-restoration.md
         window.scrollTo(0, 0);
 
-        pageTracker?.(locationContext.getCurrentMatch().path);
+        // API Analyzer maybe disabled.
+        apiAnalyzer.getInstance()?.pageTracker()(
+          locationContext.getCurrentMatch().path
+        );
 
         // analytics page_view event
         userAnalytics.event("page_view", {
