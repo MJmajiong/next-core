@@ -332,7 +332,9 @@ export class Router {
       this.kernel.currentUrl = createPath(location);
       this.kernel.currentRoute = route;
       await Promise.all([
-        this.kernel.updateWorkspaceStack(),
+        ...(window.STANDALONE_MICRO_APPS
+          ? []
+          : [this.kernel.updateWorkspaceStack()]),
         this.kernel.layoutBootstrap(layoutType),
       ]);
 

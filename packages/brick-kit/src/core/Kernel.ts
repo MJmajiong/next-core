@@ -439,7 +439,9 @@ export class Kernel {
   }
 
   loadSharedData(): void {
-    this.loadRelatedAppsAsync();
+    if (!window.STANDALONE_MICRO_APPS) {
+      this.loadRelatedAppsAsync();
+    }
   }
 
   loadUsersAsync(): void {
