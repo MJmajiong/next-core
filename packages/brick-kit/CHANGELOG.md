@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.81.2-alpha.1](https://github.com/easyops-cn/next-core/compare/@next-core/brick-kit@2.81.2-alpha.0...@next-core/brick-kit@2.81.2-alpha.1) (2021-11-04)
+
+### Bug Fixes
+
+- fix when api analyzer is not initialized ([9cbbf3d](https://github.com/easyops-cn/next-core/commit/9cbbf3dd5490f9ddbca9edb7c28bfee987910fdf))
+
 ## [2.81.2-alpha.0](https://github.com/easyops-cn/next-core/compare/@next-core/brick-kit@2.81.1-alpha.0...@next-core/brick-kit@2.81.2-alpha.0) (2021-11-04)
 
 ### Bug Fixes
