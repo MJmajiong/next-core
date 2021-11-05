@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.35.2-alpha.9](https://github.com/easyops-cn/next-core/compare/@next-core/brick-container@2.35.2-alpha.8...@next-core/brick-container@2.35.2-alpha.9) (2021-11-05)
+
+### Bug Fixes
+
+- fix html path ([0e1aef4](https://github.com/easyops-cn/next-core/commit/0e1aef4cf4f06e849e2686cfd74da2c5e56b363c))
+
 ## [2.35.2-alpha.8](https://github.com/easyops-cn/next-core/compare/@next-core/brick-container@2.35.2-alpha.7...@next-core/brick-container@2.35.2-alpha.8) (2021-11-05)
 
 **Note:** Version bump only for package @next-core/brick-container
