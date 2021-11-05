@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.82.0-alpha.4](https://github.com/easyops-cn/next-core/compare/@next-core/brick-kit@2.82.0-alpha.3...@next-core/brick-kit@2.82.0-alpha.4) (2021-11-05)
+
+### Bug Fixes
+
+- fix homepage for standalone micro-apps ([23a86df](https://github.com/easyops-cn/next-core/commit/23a86dfc45af6afbde701ce92cf31d5df012b1cf))
+
 # [2.82.0-alpha.3](https://github.com/easyops-cn/next-core/compare/@next-core/brick-kit@2.82.0-alpha.2...@next-core/brick-kit@2.82.0-alpha.3) (2021-11-05)
 
 ### Bug Fixes

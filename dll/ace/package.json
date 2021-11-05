@@ -1,6 +1,6 @@
 {
   "name": "@next-dll/ace",
-  "version": "2.1.2-alpha.5",
+  "version": "2.1.2-alpha.6",
   "description": "> TODO: description",
   "homepage": "https://github.com/easyops-cn/next-core/tree/master/dll/ace",
   "license": "GPL-3.0",
@@ -22,7 +22,7 @@
     "react-ace": "^7.0.5"
   },
   "devDependencies": {
-    "@next-core/brick-dll": "^2.26.2-alpha.5",
+    "@next-core/brick-dll": "^2.26.2-alpha.6",
     "@next-core/webpack-config-factory": "^2.12.5-alpha.0"
   }
 }
