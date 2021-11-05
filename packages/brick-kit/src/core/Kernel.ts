@@ -643,17 +643,17 @@ export class Kernel {
     return Object.assign({}, this.bootstrapData?.settings?.featureFlags);
   }
 
-  getStandaloneMenus(): any {
+  getStandaloneMenus(menuId: string): any {
     const currentAppId = this.currentApp.id;
     const currentStoryboard = this.bootstrapData.storyboards.find(
       (storyboard) => storyboard.app.id === currentAppId
     );
-    return (cloneDeep((currentStoryboard.meta as any)?.menus) ?? []).map(
-      (menu: any) => ({
+    return (cloneDeep((currentStoryboard.meta as any)?.menus) ?? [])
+      .filter((menu: any) => menu.menuId === menuId)
+      .map((menu: any) => ({
         ...menu,
         app: [{ appId: currentAppId }],
-      })
-    );
+      }));
   }
 
   async getProviderBrick(provider: string): Promise<HTMLElement> {
