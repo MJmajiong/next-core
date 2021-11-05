@@ -306,6 +306,9 @@ export class LocationContext {
     );
     for (const storyboard of sortedStoryboards) {
       const homepage = storyboard.app?.homepage;
+      if (homepage === "" && window.STANDALONE_MICRO_APPS) {
+        return storyboard;
+      }
       if (typeof homepage === "string" && homepage[0] === "/") {
         if (
           matchPath(this.location.pathname, {
