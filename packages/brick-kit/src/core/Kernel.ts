@@ -686,11 +686,10 @@ export class Kernel {
 // Since `@next-dll/editor-bricks-helper` depends on `@next-dll/react-dnd`,
 // always load react-dnd before loading editor-bricks-helper.
 async function loadScriptOfDll(dlls: string[]): Promise<void> {
-  const publicPath = window.PUBLIC_PATH ?? "";
   if (dlls.some((dll) => dll.startsWith("dll-of-editor-bricks-helper."))) {
     const dllPath = window.DLL_PATH || {};
-    await loadScript(`${publicPath}${dllPath["react-dnd"]}`);
+    await loadScript(dllPath["react-dnd"]);
   }
   // `loadScript` is auto cached, no need to filter out `react-dnd`.
-  await loadScript(dlls.map((dll) => `${publicPath}${dll}`));
+  await loadScript(dlls);
 }

@@ -39,6 +39,9 @@ window.BRICK_NEXT_VERSIONS = BRICK_NEXT_VERSIONS;
 // eslint-disable-next-line
 // @ts-ignore
 window.BRICK_NEXT_FEATURES = BRICK_NEXT_FEATURES;
+// eslint-disable-next-line
+// @ts-ignore
+window.STANDALONE_MICRO_APPS = STANDALONE_MICRO_APPS;
 
 const root = document.body;
 
