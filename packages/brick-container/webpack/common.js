@@ -44,6 +44,7 @@ const brickDllJsName = getDllJsName("@next-core/brick-dll", /^dll\.\w+\.js$/);
 
 module.exports = ({ standalone } = {}) => {
   const publicPath = standalone ? "-/core/" : "";
+  const htmlPath = standalone ? "../../" : "";
   const baseHref =
     process.env.SUBDIR === "true"
       ? "/next/"
@@ -119,14 +120,14 @@ module.exports = ({ standalone } = {}) => {
         ],
       }),
       new HtmlWebpackPlugin({
-        filename: `${standalone ? "../../" : ""}index.html`,
+        filename: `${htmlPath}index.html`,
         title: "DevOps 管理专家",
         baseHref,
         template: path.join(packageRoot, "src", "index.ejs"),
         faviconPath: `${publicPath}assets/favicon.png`,
       }),
       new HtmlWebpackPlugin({
-        filename: `${standalone ? "../../" : ""}browse-happy.html`,
+        filename: `${htmlPath}browse-happy.html`,
         title: "DevOps 管理专家",
         baseHref,
         template: path.join(packageRoot, "src", "browse-happy.ejs"),
@@ -134,7 +135,7 @@ module.exports = ({ standalone } = {}) => {
         chunks: [],
       }),
       new HtmlWebpackTagsPlugin({
-        files: ["index.html"],
+        files: [`${htmlPath}index.html`],
         scripts: [
           {
             path: brickDllJsName,
@@ -146,7 +147,7 @@ module.exports = ({ standalone } = {}) => {
       new NextHashedModuleIdsPlugin(),
       new NextDllReferencePlugin({
         context: appRoot,
-        manifest: manifest,
+        manifest,
       }),
       new webpack.DefinePlugin({
         // Ref https://webpack.js.org/plugins/define-plugin/

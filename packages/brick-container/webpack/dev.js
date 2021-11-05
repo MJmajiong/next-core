@@ -1,4 +1,3 @@
-const path = require("path");
 const { lessReplacePlugin } = require("@next-core/less-plugin-css-variables");
 const devServerOptions = require("./dev-server");
 
