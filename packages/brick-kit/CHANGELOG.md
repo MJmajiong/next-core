@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.82.0-alpha.3](https://github.com/easyops-cn/next-core/compare/@next-core/brick-kit@2.82.0-alpha.2...@next-core/brick-kit@2.82.0-alpha.3) (2021-11-05)
+
+### Bug Fixes
+
+- filter standalone menus by id ([daf17e5](https://github.com/easyops-cn/next-core/commit/daf17e5c6dd7200b06ffdfe885bf10a71d4897f4))
+
 # [2.82.0-alpha.2](https://github.com/easyops-cn/next-core/compare/@next-core/brick-kit@2.82.0-alpha.1...@next-core/brick-kit@2.82.0-alpha.2) (2021-11-04)
 
 ### Bug Fixes
