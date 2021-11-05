@@ -31,6 +31,7 @@ interface Window {
   DLL_PATH?: Record<string, string>;
   STANDALONE_MICRO_APPS?: boolean;
   NO_AUTH_GUARD?: boolean;
+  PUBLIC_PATH?: string;
   BOOTSTRAP_PATH?: string;
   BRICK_NEXT_VERSIONS?: Record<string, string>;
   BRICK_NEXT_FEATURES?: string[];
