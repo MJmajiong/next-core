@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.82.0-alpha.5](https://github.com/easyops-cn/next-core/compare/@next-core/brick-kit@2.82.0-alpha.4...@next-core/brick-kit@2.82.0-alpha.5) (2021-11-05)
+
+### Bug Fixes
+
+- load dll scripts with public path ([a69c73f](https://github.com/easyops-cn/next-core/commit/a69c73fe77691b5bd6b6c516c863610e86e16c53))
+
 # [2.82.0-alpha.4](https://github.com/easyops-cn/next-core/compare/@next-core/brick-kit@2.82.0-alpha.3...@next-core/brick-kit@2.82.0-alpha.4) (2021-11-05)
 
 ### Bug Fixes
