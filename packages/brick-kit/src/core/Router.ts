@@ -99,7 +99,9 @@ export class Router {
       params.append("t", to);
       params.append("ts", (+new Date()).toString());
       const image = new Image();
-      image.src = `assets/ea/analytics.jpg?${params.toString()}`;
+      image.src = `${
+        window.CORE_ROOT ?? ""
+      }assets/ea/analytics.jpg?${params.toString()}`;
     }
   }
 

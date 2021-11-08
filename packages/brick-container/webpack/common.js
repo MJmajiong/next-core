@@ -43,8 +43,8 @@ const dll = Object.keys(packageJson.devDependencies)
 const brickDllJsName = getDllJsName("@next-core/brick-dll", /^dll\.\w+\.js$/);
 
 module.exports = ({ standalone } = {}) => {
-  const publicPath = standalone ? "-/core/" : "";
   const htmlPath = standalone ? "../../" : "";
+  const faviconPath = `${standalone ? "-/core/" : ""}assets/favicon.png`;
   const baseHref =
     process.env.SUBDIR === "true"
       ? "/next/"
@@ -64,7 +64,6 @@ module.exports = ({ standalone } = {}) => {
         "..",
         standalone ? "dist-standalone/-/core" : "dist"
       ),
-      publicPath,
     },
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
@@ -91,7 +90,9 @@ module.exports = ({ standalone } = {}) => {
           .map((packageName) =>
             path.join(
               require.resolve(`${packageName}/package.json`),
-              "../dist/*.js"
+              standalone && packageName === "@next-core/brick-dll"
+                ? "../dist-standalone/*.js"
+                : "../dist/*.js"
             )
           )
           .flatMap((filePath) => [filePath, `${filePath}.map`])
@@ -124,14 +125,14 @@ module.exports = ({ standalone } = {}) => {
         title: "DevOps 管理专家",
         baseHref,
         template: path.join(packageRoot, "src", "index.ejs"),
-        faviconPath: `${publicPath}assets/favicon.png`,
+        faviconPath,
       }),
       new HtmlWebpackPlugin({
         filename: `${htmlPath}browse-happy.html`,
         title: "DevOps 管理专家",
         baseHref,
         template: path.join(packageRoot, "src", "browse-happy.ejs"),
-        faviconPath: `${publicPath}assets/favicon.png`,
+        faviconPath,
         chunks: [],
       }),
       new HtmlWebpackTagsPlugin({
@@ -164,10 +165,7 @@ module.exports = ({ standalone } = {}) => {
         // Recording dll js path which contains hash for long-term-caching.
         DLL_PATH: JSON.stringify(
           Object.fromEntries(
-            dll.map(({ dllName, jsName }) => [
-              dllName,
-              `${publicPath}${jsName}`,
-            ])
+            dll.map(({ dllName, jsName }) => [dllName, jsName])
           )
         ),
         STANDALONE_MICRO_APPS: JSON.stringify(!!standalone),

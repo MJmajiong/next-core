@@ -282,7 +282,7 @@ export class Kernel {
     if (storyboard.dependsAll) {
       const dllPath = window.DLL_PATH || {};
       await loadScriptOfDll(Object.values(dllPath));
-      await loadScript(
+      await loadScriptOfBricksOrTemplates(
         brickPackages
           .map((item) => item.filePath)
           .concat(templatePackages.map((item) => item.filePath))
@@ -294,7 +294,7 @@ export class Kernel {
         storyboard,
         templatePackages
       );
-      await loadScript(templateDeps);
+      await loadScriptOfBricksOrTemplates(templateDeps);
       // 加载模板后才能加工得到最终的构件表
       const { dll, deps, bricks } = getDllAndDepsOfStoryboard(
         await asyncProcessStoryboard(
@@ -308,7 +308,7 @@ export class Kernel {
         }
       );
       await loadScriptOfDll(dll);
-      await loadScript(deps);
+      await loadScriptOfBricksOrTemplates(deps);
       await loadLazyBricks(bricks);
     }
   }
@@ -322,9 +322,10 @@ export class Kernel {
       storyboard,
       templatePackages
     );
-    prefetchScript(templateDeps);
+    prefetchScript(templateDeps, window.PUBLIC_ROOT);
     const result = getDllAndDepsOfStoryboard(storyboard, brickPackages);
-    prefetchScript(result.dll.concat(result.deps));
+    prefetchScript(result.dll, window.CORE_ROOT);
+    prefetchScript(result.deps, window.PUBLIC_ROOT);
     storyboard.$$depsProcessed = true;
   }
 
@@ -374,7 +375,7 @@ export class Kernel {
       this.bootstrapData.brickPackages
     );
     await loadScriptOfDll(dll);
-    await loadScript(deps);
+    await loadScriptOfBricksOrTemplates(deps);
     await loadLazyBricks(filteredBricks);
   }
 
@@ -389,7 +390,7 @@ export class Kernel {
       this.bootstrapData.brickPackages
     );
     await loadScriptOfDll(dll);
-    await loadScript(deps);
+    await loadScriptOfBricksOrTemplates(deps);
   }
 
   firstRendered(): void {
@@ -688,8 +689,12 @@ export class Kernel {
 async function loadScriptOfDll(dlls: string[]): Promise<void> {
   if (dlls.some((dll) => dll.startsWith("dll-of-editor-bricks-helper."))) {
     const dllPath = window.DLL_PATH || {};
-    await loadScript(dllPath["react-dnd"]);
+    await loadScript(dllPath["react-dnd"], window.CORE_ROOT);
   }
   // `loadScript` is auto cached, no need to filter out `react-dnd`.
-  await loadScript(dlls);
+  await loadScript(dlls, window.CORE_ROOT);
+}
+
+function loadScriptOfBricksOrTemplates(src: string[]): Promise<unknown> {
+  return loadScript(src, window.PUBLIC_ROOT);
 }

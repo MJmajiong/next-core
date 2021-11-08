@@ -1,3 +1,5 @@
+import "./public-path";
+import "@next-core/brick-dll/public-path.js";
 import "moment";
 import "moment/locale/zh-cn";
 import React from "react";

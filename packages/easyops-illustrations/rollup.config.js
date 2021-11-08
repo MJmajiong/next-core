@@ -10,7 +10,7 @@ export default rollupFactory({
       publicPath: ["assets/illustrations/"],
       fileName: "[dirname][name].[hash][extname]",
       destDir: "dist/illustrations",
-      //  limit: 100000
+      limit: 0,
       sourceDir: path.join(__dirname, "src", "images"),
     }),
   ],
