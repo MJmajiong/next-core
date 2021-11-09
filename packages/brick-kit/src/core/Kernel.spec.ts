@@ -316,16 +316,22 @@ describe("Kernel", () => {
     await kernel.loadDepsOfStoryboard(storyboard);
     await kernel.registerCustomTemplatesInStoryboard(storyboard);
     expect(spyOnLoadScript).toBeCalledTimes(4);
-    expect(spyOnLoadScript).toHaveBeenNthCalledWith(1, ["layout.js"]);
+    expect(spyOnLoadScript).toHaveBeenNthCalledWith(
+      1,
+      ["layout.js"],
+      undefined
+    );
     expect(spyOnLoadScript).toHaveBeenNthCalledWith(
       2,
-      "dll-of-react-dnd.789.js"
+      "dll-of-react-dnd.789.js",
+      undefined
     );
-    expect(spyOnLoadScript).toHaveBeenNthCalledWith(3, [
-      "d3.js",
-      "dll-of-editor-bricks-helper.abc.js",
-    ]);
-    expect(spyOnLoadScript).toHaveBeenNthCalledWith(4, ["dep.js"]);
+    expect(spyOnLoadScript).toHaveBeenNthCalledWith(
+      3,
+      ["d3.js", "dll-of-editor-bricks-helper.abc.js"],
+      undefined
+    );
+    expect(spyOnLoadScript).toHaveBeenNthCalledWith(4, ["dep.js"], undefined);
     expect(loadLazyBricks).toBeCalledTimes(1);
     expect(loadLazyBricks).toBeCalledWith(["my-brick"]);
     expect(loadAllLazyBricks).not.toBeCalled();
@@ -351,14 +357,23 @@ describe("Kernel", () => {
     expect(spyOnLoadScript).toBeCalledTimes(3);
     expect(spyOnLoadScript).toHaveBeenNthCalledWith(
       1,
-      "dll-of-react-dnd.789.js"
-    );
-    expect(spyOnLoadScript).toHaveBeenNthCalledWith(2, [
-      "dll-of-d3.123.js",
-      "dll-of-editor-bricks-helper.456.js",
       "dll-of-react-dnd.789.js",
-    ]);
-    expect(spyOnLoadScript).toHaveBeenNthCalledWith(3, ["all.js", "layout.js"]);
+      undefined
+    );
+    expect(spyOnLoadScript).toHaveBeenNthCalledWith(
+      2,
+      [
+        "dll-of-d3.123.js",
+        "dll-of-editor-bricks-helper.456.js",
+        "dll-of-react-dnd.789.js",
+      ],
+      undefined
+    );
+    expect(spyOnLoadScript).toHaveBeenNthCalledWith(
+      3,
+      ["all.js", "layout.js"],
+      undefined
+    );
     expect(loadLazyBricks).not.toBeCalled();
     expect(loadAllLazyBricks).toBeCalled();
 
@@ -700,30 +715,30 @@ describe("Kernel", () => {
       brick: "my.test-brick",
     });
     expect(loadScript).toBeCalledTimes(2);
-    expect(loadScript).toHaveBeenNthCalledWith(1, ["d3"]);
-    expect(loadScript).toHaveBeenNthCalledWith(2, ["my"]);
+    expect(loadScript).toHaveBeenNthCalledWith(1, ["d3"], undefined);
+    expect(loadScript).toHaveBeenNthCalledWith(2, ["my"], undefined);
     expect(loadLazyBricks).toBeCalledWith(["my.test-brick"]);
   });
 
   it("should loadEditorBricks", async () => {
     kernel.bootstrapData = {} as any;
     await kernel.loadEditorBricks(["my.test-brick--editor"]);
-    expect(loadScript).toHaveBeenNthCalledWith(1, []);
-    expect(loadScript).toHaveBeenNthCalledWith(2, ["my/editors"]);
+    expect(loadScript).toHaveBeenNthCalledWith(1, [], undefined);
+    expect(loadScript).toHaveBeenNthCalledWith(2, ["my/editors"], undefined);
   });
 
   it("should getProviderBrick", async () => {
     kernel.bootstrapData = {} as any;
     await kernel.getProviderBrick("my.test-provider");
-    expect(loadScript).toHaveBeenNthCalledWith(1, []);
-    expect(loadScript).toHaveBeenNthCalledWith(2, []);
+    expect(loadScript).toHaveBeenNthCalledWith(1, [], undefined);
+    expect(loadScript).toHaveBeenNthCalledWith(2, [], undefined);
   });
 
   it("should getProviderBrick for legacy custom api", async () => {
     kernel.bootstrapData = {} as any;
     await kernel.getProviderBrick("easyops.custom_api@myAwesomeApi");
-    expect(loadScript).toHaveBeenNthCalledWith(1, []);
-    expect(loadScript).toHaveBeenNthCalledWith(2, []);
+    expect(loadScript).toHaveBeenNthCalledWith(1, [], undefined);
+    expect(loadScript).toHaveBeenNthCalledWith(2, [], undefined);
     const searchAllMicroAppApiOrchestration =
       InstanceApi_postSearch as jest.Mock;
     const usedCustomApis = [
@@ -765,8 +780,8 @@ describe("Kernel", () => {
   it("should getProviderBrick when flow api", async () => {
     kernel.bootstrapData = {} as any;
     await kernel.getProviderBrick("easyops.custom_api@myAwesomeApi:1.2.0");
-    expect(loadScript).toHaveBeenNthCalledWith(1, []);
-    expect(loadScript).toHaveBeenNthCalledWith(2, []);
+    expect(loadScript).toHaveBeenNthCalledWith(1, [], undefined);
+    expect(loadScript).toHaveBeenNthCalledWith(2, [], undefined);
     const searchAllMicroAppApiOrchestration =
       InstanceApi_postSearch as jest.Mock;
     const usedCustomApis = [
@@ -791,8 +806,8 @@ describe("Kernel", () => {
       expect(error.message).toBe(
         'Provider not defined: "my.not-defined-provider".'
       );
-      expect(loadScript).toHaveBeenNthCalledWith(1, []);
-      expect(loadScript).toHaveBeenNthCalledWith(2, ["my"]);
+      expect(loadScript).toHaveBeenNthCalledWith(1, [], undefined);
+      expect(loadScript).toHaveBeenNthCalledWith(2, ["my"], undefined);
     }
   });
 
@@ -812,9 +827,10 @@ describe("Kernel", () => {
     // Prefetch again.
     kernel.prefetchDepsOfStoryboard(storyboard);
 
-    expect(prefetchScript).toBeCalledTimes(2);
-    expect(prefetchScript).toHaveBeenNthCalledWith(1, ["layout.js"]);
-    expect(prefetchScript).toHaveBeenNthCalledWith(2, ["d3.js", "dep.js"]);
+    expect(prefetchScript).toBeCalledTimes(3);
+    expect(prefetchScript).toHaveBeenNthCalledWith(1, ["layout.js"], undefined);
+    expect(prefetchScript).toHaveBeenNthCalledWith(2, ["d3.js"], undefined);
+    expect(prefetchScript).toHaveBeenNthCalledWith(3, ["dep.js"], undefined);
   });
 
   it("should load users async", async () => {
