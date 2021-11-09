@@ -7,7 +7,6 @@ export default rollupFactory({
   plugins: [
     url({
       include: ["**/*.png"],
-      publicPath: ["assets/illustrations/"],
       fileName: "[dirname][name].[hash][extname]",
       destDir: "dist/illustrations",
       limit: 0,

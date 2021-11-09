@@ -39,7 +39,7 @@ function dllConfFactory(standalone) {
       path: distPath,
       library: "[name]",
       hashDigestLength: 8,
-      publicPath: standalone ? "-/core/" : "",
+      publicPath: standalone ? "STANDALONE_DLL_PUBLIC_PATH" : "",
     },
     module: {
       rules: [

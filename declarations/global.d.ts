@@ -32,6 +32,7 @@ interface Window {
   STANDALONE_MICRO_APPS?: boolean;
   NO_AUTH_GUARD?: boolean;
   BOOTSTRAP_PATH?: string;
+  APP_ROOT?: string;
   PUBLIC_ROOT?: string;
   CORE_ROOT?: string;
   BRICK_NEXT_VERSIONS?: Record<string, string>;

@@ -44,7 +44,12 @@ const brickDllJsName = getDllJsName("@next-core/brick-dll", /^dll\.\w+\.js$/);
 
 module.exports = ({ standalone } = {}) => {
   const htmlPath = standalone ? "../../" : "";
-  const faviconPath = `${standalone ? "-/core/" : ""}assets/favicon.png`;
+  const htmlPublicPath = standalone
+    ? "<!--# echo var='app_root' -->-/core/"
+    : "auto";
+  const faviconPath = `${
+    standalone ? "<!--# echo var='app_root' -->-/core/" : ""
+  }assets/favicon.png`;
   const baseHref =
     process.env.SUBDIR === "true"
       ? "/next/"
@@ -84,15 +89,42 @@ module.exports = ({ standalone } = {}) => {
     },
     plugins: [
       new CopyPlugin({
+        patterns: [
+          path.join(
+            require.resolve("@next-core/brick-dll/package.json"),
+            standalone ? "../dist-standalone/*.js" : "../dist/*.js"
+          ),
+        ]
+          .flatMap((filePath) => [filePath, `${filePath}.map`])
+          .map((from) => ({
+            from,
+            to: "[name].[ext]",
+            transform:
+              standalone && /\.js$/.test(from)
+                ? (content, absoluteFrom) => {
+                    if (!/dll\.[^.]+\.js$/.test(absoluteFrom)) {
+                      return content;
+                    }
+                    const space = absoluteFrom.endsWith("dll.bundle.js")
+                      ? " "
+                      : "";
+                    return content
+                      .toString()
+                      .replace(
+                        `.p${space}=${space}"STANDALONE_DLL_PUBLIC_PATH"`,
+                        `.p${space}=${space}"".concat(window.PUBLIC_ROOT,"core/")`
+                      );
+                  }
+                : undefined,
+          })),
+      }),
+      new CopyPlugin({
         patterns: dll
           .map((d) => d.packageName)
-          .concat("@next-core/brick-dll")
           .map((packageName) =>
             path.join(
               require.resolve(`${packageName}/package.json`),
-              standalone && packageName === "@next-core/brick-dll"
-                ? "../dist-standalone/*.js"
-                : "../dist/*.js"
+              "../dist/*.js"
             )
           )
           .flatMap((filePath) => [filePath, `${filePath}.map`])
@@ -122,6 +154,7 @@ module.exports = ({ standalone } = {}) => {
       }),
       new HtmlWebpackPlugin({
         filename: `${htmlPath}index.html`,
+        publicPath: htmlPublicPath,
         title: "DevOps 管理专家",
         baseHref,
         template: path.join(packageRoot, "src", "index.ejs"),
@@ -129,6 +162,7 @@ module.exports = ({ standalone } = {}) => {
       }),
       new HtmlWebpackPlugin({
         filename: `${htmlPath}browse-happy.html`,
+        publicPath: htmlPublicPath,
         title: "DevOps 管理专家",
         baseHref,
         template: path.join(packageRoot, "src", "browse-happy.ejs"),

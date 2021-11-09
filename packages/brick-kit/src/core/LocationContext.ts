@@ -296,6 +296,9 @@ export class LocationContext {
   }
 
   matchStoryboard(storyboards: RuntimeStoryboard[]): RuntimeStoryboard {
+    if (window.STANDALONE_MICRO_APPS && storyboards.length === 1) {
+      return storyboards[0];
+    }
     // Put apps with longer homepage before shorter ones.
     // E.g., `/legacy/tool` will match first before `/legacy`.
     // This enables two apps with relationship of parent-child of homepage.
@@ -306,9 +309,6 @@ export class LocationContext {
     );
     for (const storyboard of sortedStoryboards) {
       const homepage = storyboard.app?.homepage;
-      if (homepage === "" && window.STANDALONE_MICRO_APPS) {
-        return storyboard;
-      }
       if (typeof homepage === "string" && homepage[0] === "/") {
         if (
           matchPath(this.location.pathname, {
