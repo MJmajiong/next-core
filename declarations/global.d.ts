@@ -31,10 +31,10 @@ interface Window {
   DLL_PATH?: Record<string, string>;
   STANDALONE_MICRO_APPS?: boolean;
   NO_AUTH_GUARD?: boolean;
-  BOOTSTRAP_PATH?: string;
-  APP_ROOT?: string;
+  APP_DIR?: string;
   PUBLIC_ROOT?: string;
   CORE_ROOT?: string;
+  BOOTSTRAP_FILE?: string;
   BRICK_NEXT_VERSIONS?: Record<string, string>;
   BRICK_NEXT_FEATURES?: string[];
 }

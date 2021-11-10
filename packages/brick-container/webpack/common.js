@@ -45,10 +45,10 @@ const brickDllJsName = getDllJsName("@next-core/brick-dll", /^dll\.\w+\.js$/);
 module.exports = ({ standalone } = {}) => {
   const htmlPath = standalone ? "../../" : "";
   const htmlPublicPath = standalone
-    ? "<!--# echo var='app_root' -->-/core/"
+    ? "<!--# echo var='app_dir' -->/-/core/"
     : "auto";
   const faviconPath = `${
-    standalone ? "<!--# echo var='app_root' -->-/core/" : ""
+    standalone ? "<!--# echo var='app_dir' -->/-/core/" : ""
   }assets/favicon.png`;
   const baseHref =
     process.env.SUBDIR === "true"
@@ -69,6 +69,7 @@ module.exports = ({ standalone } = {}) => {
         "..",
         standalone ? "dist-standalone/-/core" : "dist"
       ),
+      publicPath: "",
     },
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
@@ -92,30 +93,29 @@ module.exports = ({ standalone } = {}) => {
         patterns: [
           path.join(
             require.resolve("@next-core/brick-dll/package.json"),
-            standalone ? "../dist-standalone/*.js" : "../dist/*.js"
+            "../dist/*.js"
           ),
         ]
           .flatMap((filePath) => [filePath, `${filePath}.map`])
           .map((from) => ({
             from,
             to: "[name].[ext]",
-            transform:
-              standalone && /\.js$/.test(from)
-                ? (content, absoluteFrom) => {
-                    if (!/dll\.[^.]+\.js$/.test(absoluteFrom)) {
-                      return content;
-                    }
-                    const space = absoluteFrom.endsWith("dll.bundle.js")
-                      ? " "
-                      : "";
-                    return content
-                      .toString()
-                      .replace(
-                        `.p${space}=${space}"STANDALONE_DLL_PUBLIC_PATH"`,
-                        `.p${space}=${space}"".concat(window.PUBLIC_ROOT,"core/")`
-                      );
+            transform: /\.js$/.test(from)
+              ? (content, absoluteFrom) => {
+                  if (!/dll\.[^.]+\.js$/.test(absoluteFrom)) {
+                    return content;
                   }
-                : undefined,
+                  const space = absoluteFrom.endsWith("dll.bundle.js")
+                    ? " "
+                    : "";
+                  return content
+                    .toString()
+                    .replace(
+                      `.p${space}=${space}"__DLL_PUBLIC_PATH__"`,
+                      `.p${space}=${space}window.CORE_ROOT ||""`
+                    );
+                }
+              : undefined,
           })),
       }),
       new CopyPlugin({
@@ -202,7 +202,6 @@ module.exports = ({ standalone } = {}) => {
             dll.map(({ dllName, jsName }) => [dllName, jsName])
           )
         ),
-        STANDALONE_MICRO_APPS: JSON.stringify(!!standalone),
       }),
     ],
   };

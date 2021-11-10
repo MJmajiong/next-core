@@ -207,7 +207,9 @@ export class Kernel {
     interceptorParams?: InterceptorParams
   ): Promise<void> {
     const data = await (window.STANDALONE_MICRO_APPS
-      ? http.get<BootstrapData>(window.BOOTSTRAP_PATH, { interceptorParams })
+      ? http.get<BootstrapData>(`${window.APP_DIR}/${window.BOOTSTRAP_FILE}`, {
+          interceptorParams,
+        })
       : AuthSdk.bootstrap<BootstrapData>(
           {
             brief: true,

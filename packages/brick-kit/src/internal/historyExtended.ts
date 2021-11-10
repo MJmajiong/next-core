@@ -104,6 +104,11 @@ export function historyExtended(
   };
 }
 
+/**
+ * Override history for standalone micro apps.
+ *
+ * when `push` or `replace` to other apps, force page refresh.
+ */
 function standaloneHistoryOverridden(
   browserHistory: History<PluginHistoryState>
 ): Pick<History<PluginHistoryState>, "push" | "replace"> {
@@ -119,15 +124,15 @@ function standaloneHistoryOverridden(
       } else {
         pathname = path.pathname;
       }
-      if (
-        pathname === window.APP_ROOT.replace(/\/$/, "") ||
-        pathname.startsWith(window.APP_ROOT)
-      ) {
+      const homepage = `/${window.APP_DIR}`;
+      if (pathname === homepage || pathname.startsWith(`${homepage}/`)) {
+        // Going to the same app.
         return (method === "push" ? originalPush : originalReplace)(
           path as string,
           state
         );
       }
+      // Going to another app.
       return location[method === "push" ? "assign" : "replace"](
         pathIsString
           ? getBasePath() + path.replace(/^\//, "")
